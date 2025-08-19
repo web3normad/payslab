@@ -8,11 +8,11 @@ const Navbar: React.FC = () => {
     <div className="fixed top-0 left-64 right-0 h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-10">
       <div className="flex items-center space-x-4 flex-1 max-w-md">
         <div className="relative w-full">
-          <MagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <MagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 " size={20} />
           <input
             type="text"
             placeholder="Search trades, suppliers, or tracking..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#444444] focus:border-transparent"
           />
         </div>
       </div>

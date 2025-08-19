@@ -130,7 +130,7 @@ export default function ConvertNGN() {
             <div className="space-y-6">
               
               {/* Exchange Rate Card */}
-              <Card className="bg-gradient-to-r from-[#8b61c2] to-[#7952a8] text-white border-0">
+              <Card className="bg-[linear-gradient(135deg,rgb(131,131,131)_-35%,rgba(41,41,41,0.34)_-20%,rgba(51,51,51,0.55)_-15%,rgb(47,47,47)_100%)] text-white border-0">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm opacity-75">Current Exchange Rate</p>
@@ -172,7 +172,7 @@ export default function ConvertNGN() {
               {/* Conversion Form */}
               <Card>
                 <div className="flex items-center space-x-2 text-gray-800 mb-6">
-                  <Calculator size={24} className="text-[#8b61c2]" />
+                  <Calculator size={24} className="text-[#444444]" />
                   <h2 className="text-lg font-semibold">Currency Conversion</h2>
                 </div>
 
@@ -195,7 +195,7 @@ export default function ConvertNGN() {
 
                   {/* Conversion Arrow */}
                   <div className="flex justify-center">
-                    <div className="p-3 bg-[#8b61c2] text-white rounded-full">
+                    <div className="p-3 bg-[#444444] text-white rounded-full">
                       <ArrowsLeftRight size={24} />
                     </div>
                   </div>

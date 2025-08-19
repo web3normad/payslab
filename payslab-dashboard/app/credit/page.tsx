@@ -31,7 +31,7 @@ const CustomDropdown = ({ options, value, onChange, placeholder, disabled = fals
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className={`w-full bg-gray-50 text-gray-800 rounded-xl px-4 py-3 text-left border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors ${
+        className={`w-full bg-gray-50 text-gray-800 rounded-xl px-4 py-3 text-left border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#444444] transition-colors ${
           disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'
         }`}
       >
@@ -200,8 +200,8 @@ export default function LetterOfCredit() {
             </div>
             <div className="text-right">
               <p className="text-sm text-gray-500">Processing Time</p>
-              <p className="text-2xl font-bold text-green-600">24-48 Hours</p>
-              <p className="text-sm text-green-600 font-medium">vs 6-8 weeks traditional</p>
+              <p className="text-2xl font-bold text-[#444444]">24-48 Hours</p>
+              <p className="text-sm text-[#444444] font-medium">vs 6-8 weeks traditional</p>
             </div>
           </div>
 
@@ -211,7 +211,7 @@ export default function LetterOfCredit() {
             <div className="space-y-6">
               
               {/* Benefits Card */}
-              <Card className="bg-gradient-to-r from-[#8b61c2] to-[#7952a8] text-white border-0">
+              <Card className="bg-[linear-gradient(135deg,rgb(131,131,131)_-35%,rgba(41,41,41,0.34)_-20%,rgba(51,51,51,0.55)_-15%,rgb(47,47,47)_100%)] text-white border-0">
                 <div className="grid grid-cols-3 gap-4">
                   <div className="text-center">
                     <div className="p-3 bg-white bg-opacity-20 rounded-xl mx-auto w-fit mb-2">
@@ -259,7 +259,7 @@ export default function LetterOfCredit() {
               {/* Application Form */}
               <Card>
                 <div className="flex items-center space-x-2 text-gray-800 mb-6">
-                  <FileText size={24} className="text-[#8b61c2]" />
+                  <FileText size={24} className="text-[#444444]" />
                   <h2 className="text-lg font-semibold">LoC Application</h2>
                 </div>
 
@@ -285,7 +285,7 @@ export default function LetterOfCredit() {
                         value={quantity}
                         onChange={(e) => setQuantity(e.target.value)}
                         placeholder="0"
-                        className="w-full bg-gray-50 text-gray-800 rounded-xl px-4 py-3 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:border-transparent transition-colors"
+                        className="w-full bg-gray-50 text-gray-800 rounded-xl px-4 py-3 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#444444] focus:border-transparent transition-colors"
                         disabled={applicationStatus === "pending" || applicationStatus === "approved"}
                       />
                     </div>
@@ -298,7 +298,7 @@ export default function LetterOfCredit() {
                           value={valueUSD}
                           onChange={(e) => setValueUSD(e.target.value)}
                           placeholder="0.00"
-                          className="w-full bg-gray-50 text-gray-800 rounded-xl px-8 py-3 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:border-transparent transition-colors"
+                          className="w-full bg-gray-50 text-gray-800 rounded-xl px-8 py-3 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#444444] focus:border-transparent transition-colors"
                           disabled={applicationStatus === "pending" || applicationStatus === "approved"}
                         />
                       </div>
@@ -346,7 +346,7 @@ export default function LetterOfCredit() {
                       </div>
                       <div className="flex justify-between text-sm border-t pt-3">
                         <span className="text-gray-600 font-medium">Total Cost:</span>
-                        <span className="font-bold text-[#8b61c2] text-lg">${(parseFloat(valueUSD) * 0.01 + 200).toLocaleString()}</span>
+                        <span className="font-bold text-[#444444] text-lg">${(parseFloat(valueUSD) * 0.01 + 200).toLocaleString()}</span>
                       </div>
                     </div>
                   )}

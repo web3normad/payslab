@@ -20,12 +20,12 @@ const Button: React.FC<ButtonProps> = ({
   type = 'button',
   ...props 
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2  disabled:opacity-50 disabled:cursor-not-allowed ';
   
   const variants = {
-    primary: 'bg-[#8b61c2] text-white hover:bg-[#7952a8] focus:ring-[#8b61c2] shadow-sm hover:shadow-md',
+    primary: 'bg-[linear-gradient(135deg,rgb(131,131,131)_-35%,rgba(41,41,41,0.34)_-20%,rgba(51,51,51,0.55)_-15%,rgb(47,47,47)_100%)] text-white hover:bg-[#7952a8] focus:ring-[#444444] shadow-sm hover:shadow-md',
     secondary: 'bg-[#373941] text-white hover:bg-[#2a2c33] focus:ring-[#373941] shadow-sm hover:shadow-md',
-    outline: 'bg-white border-2 border-[#8b61c2] text-[#8b61c2] hover:bg-[#8b61c2] hover:text-white focus:ring-[#8b61c2]',
+    outline: 'border-2 border-[#444444]   text-[#444444] hover:bg-[#444444] hover:text-white focus:ring-0',
     ghost: 'bg-transparent text-[#373941] hover:bg-gray-100 focus:ring-gray-300'
   };
   

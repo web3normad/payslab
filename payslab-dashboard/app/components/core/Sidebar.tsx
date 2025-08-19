@@ -43,7 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
               onClick={() => setActiveTab(item.id)}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
                 activeTab === item.id 
-                  ? 'bg-[#8b61c2] text-white shadow-md' 
+                  ? 'bg-[#444444] text-white shadow-md' 
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
@@ -55,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
       </nav>
       
       <div className="absolute bottom-6 left-6 right-6">
-        <Card className="bg-gradient-to-r from-[#8b61c2] to-[#7952a8] text-white border-0 p-4">
+        <Card className="bg-[linear-gradient(135deg,rgb(131,131,131)_-35%,rgba(41,41,41,0.34)_-20%,rgba(51,51,51,0.55)_-15%,rgb(47,47,47)_100%)] text-white border-0 p-4">
           <div className="flex items-center space-x-3">
             <CurrencyDollar size={24} />
             <div>

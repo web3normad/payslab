@@ -92,28 +92,28 @@ const TradeModal = ({ isOpen, onClose, trade, onDownloadPDF }: {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Trade Details</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex items-center space-x-3">
-                <Package size={20} className="text-[#8b61c2]" />
+                <Package size={20} className="text-[#444444]" />
                 <div>
                   <p className="text-sm text-gray-600">Product</p>
                   <p className="font-medium">{trade.product}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
-                <CurrencyDollar size={20} className="text-[#8b61c2]" />
+                <CurrencyDollar size={20} className="text-[#444444]" />
                 <div>
                   <p className="text-sm text-gray-600">Amount</p>
                   <p className="font-medium">{trade.amount}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
-                <MapPin size={20} className="text-[#8b61c2]" />
+                <MapPin size={20} className="text-[#444444]" />
                 <div>
                   <p className="text-sm text-gray-600">Destination</p>
                   <p className="font-medium">{trade.destination}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
-                <Calendar size={20} className="text-[#8b61c2]" />
+                <Calendar size={20} className="text-[#444444]" />
                 <div>
                   <p className="text-sm text-gray-600">Expected Delivery</p>
                   <p className="font-medium">{trade.expectedDelivery}</p>
@@ -127,7 +127,7 @@ const TradeModal = ({ isOpen, onClose, trade, onDownloadPDF }: {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Progress</h3>
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div 
-                className="bg-[#8b61c2] h-3 rounded-full transition-all duration-300" 
+                className="bg-[#444444] h-3 rounded-full transition-all duration-300" 
                 style={{ width: `${trade.progress}%` }}
               ></div>
             </div>
@@ -160,7 +160,7 @@ const TradeModal = ({ isOpen, onClose, trade, onDownloadPDF }: {
               {documents.map((doc) => (
                 <div key={doc.type} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                   <div className="flex items-center space-x-3">
-                    <FileText size={20} className="text-[#8b61c2]" />
+                    <FileText size={20} className="text-[#444444]" />
                     <span className="font-medium">{doc.name}</span>
                   </div>
                   <Button
@@ -231,14 +231,14 @@ const FilterDropdown = ({ options, onApplyFilters }: {
                   type="checkbox"
                   checked={selectedFilters.includes(option.id)}
                   onChange={() => handleFilterToggle(option.id)}
-                  className="rounded border-gray-300 text-[#8b61c2] focus:ring-[#8b61c2]"
+                  className="rounded border-gray-300 text-[#8b61c2] focus:ring-[#8b61c2] accent-[#444444]"
                 />
                 <span className="text-sm">{option.label}</span>
               </label>
             ))}
           </div>
           <div className="flex space-x-2 mt-4">
-            <Button size="small" onClick={applyFilters} className="flex-1">
+            <Button size="small" onClick={applyFilters} className="flex-1 focus:ring-0">
               Apply
             </Button>
             <Button variant="outline" size="small" onClick={() => setIsOpen(false)} className="flex-1">
@@ -269,11 +269,11 @@ const TradeCard = ({ title, value, highlight, isLoading = false }: {
             <p className="text-2xl font-bold text-gray-900 mt-2">{value}</p>
           )}
           {highlight && (
-            <p className="text-sm text-[#8b61c2] font-medium mt-1">{highlight}</p>
+            <p className="text-sm text-[#444444] font-medium mt-1">{highlight}</p>
           )}
         </div>
-        <div className="p-3 bg-[#8b61c2] bg-opacity-10 rounded-xl">
-          <ShoppingBag size={24} className="text-[#8b61c2]" />
+        <div className="p-3 bg-[#444444] bg-opacity-10 rounded-xl">
+          <ShoppingBag size={24} className="text-[#444444]" />
         </div>
       </div>
     </Card>
@@ -476,7 +476,7 @@ export default function MyTrades() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="block w-[250px] pl-10 pr-3 py-2 border border-gray-300 rounded-xl bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8b61c2]"
+                  className="block w-[250px] pl-10 pr-3 py-2 border border-gray-300 rounded-xl bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#444444]"
                   placeholder="Search trades..."
                 />
               </div>
@@ -500,7 +500,7 @@ export default function MyTrades() {
                   onClick={() => setSelectedTab(tab.id)}
                   className={`px-4 py-2 text-sm font-medium rounded-xl transition-colors ${
                     selectedTab === tab.id
-                      ? 'bg-[#8b61c2] text-white'
+                      ? 'bg-[#444444] text-white'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
@@ -532,7 +532,7 @@ export default function MyTrades() {
               })}
               <button 
                 onClick={() => setActiveFilters([])}
-                className="text-xs text-[#8b61c2] hover:text-[#7952a8]"
+                className="text-xs text-red-500"
               >
                 Clear all
               </button>
