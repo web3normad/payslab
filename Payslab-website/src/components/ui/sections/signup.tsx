@@ -9,13 +9,13 @@ import { FiUnlock } from "react-icons/fi";
 
 // bg-[#f3f3f3]
 
-const Signin = () => {
+const Signup = () => {
   return (
-    <div className=''>
+    <div className='pt-'>
 
         {/* MAIN DIV HOLDING EVERYTHING  */}
 
-        <div className='flex justify-center gap-32 items-center flex-col lg:flex-row '>
+        <div className='flex justify-center gap-32 items-center '>
         
         {/* DIV HOLDING THE LEFT */}
 
@@ -26,7 +26,7 @@ const Signin = () => {
                     <h1 className='font-bold'>PaySlab</h1>
                 </div> */}
 
-                <h1 className='text-6xl font-medium pt-10 pb-10 text-center -mt-7 lg:text-start'>sign In</h1>
+                <h1 className='text-6xl font-medium pt-10 pb-10 text-center -mt-7 lg:text-start'>sign Up</h1>
                     
 
                 <form className='pt-16' action="">
@@ -49,12 +49,12 @@ const Signin = () => {
                     </div> */}
 
                     <button className= 'hover:bg-[#797979] cursor-pointer bg-black text-white font-medium w-full p-2 rounded-xl mt-7'>
-                        Sign in
+                        Sign up
                     </button>
                     
 
                     <div className='pt-4'>
-                        <p className='cursor-pointer text-sm text-gray-500 '>Don't have an account?<span className='cursor-pointer text-black ml-1'>Sign up</span></p>
+                        <p className='cursor-pointer text-sm text-gray-500 '>Already have an account?<span className='cursor-pointer text-black ml-1'>Sign up</span></p>
                         {/* <h1 className='cursor-pointer text-sm'>Forgot Password</h1> */}
                     </div>
 
@@ -80,7 +80,7 @@ const Signin = () => {
 
             {/* DIV HOLDING THE RIGHT */}
 
-                <div className=' hidden lg:flex card w-[35%] text-white pb-20'>
+                <div className='hidden lg:flex card w-[35%] text-white pb-20'>
 
                     <div className='px-20'>
                         
@@ -91,16 +91,16 @@ const Signin = () => {
                         <h1 className='font-medium ml-5 pt-3'>PaySlab</h1>
 
                         <div>
-                            <h1 className='text-4xl font-semibold ml-5 pt-10'>Welcome Back to PaySlab</h1>
+                            <h1 className='text-4xl font-semibold ml-5 pt-10'>Welcome to PaySlab</h1>
 
                            <div className='ml-6 pt-7'>
-                             <p>At PaySlab, we’re excited to have you back. Whether you’re revisiting an ongoing transaction or exploring new opportunities, our platform is here to help you move money across borders with ease and confidence.</p>
+                             <p>Your Trusted Cross-Border Trade Payment Automation Platform</p>
 
                             <p className='pt-5'>
 
-                                We continue to streamline and automate cross-border payments, ensuring every transaction is safe, efficient, and transparent.</p>
+                                At PaySlab, we empower international traders to transact with confidence. Our platform is designed to streamline and automate cross-border payments, ensuring every transaction is safe, efficient, and transparent. Whether you're importing goods or managing global partners, PaySlab takes the complexity out of international trade payments.</p>
 
-                            <p className='pt-10 font-semibold'>Log back in and experience the smarter, safer way to transact globally — just like before.</p>
+                            <p className='pt-10 font-semibold'>Join us today and experience the smarter, safer way to transact across borders.</p>
                            </div>
                         </div>
                     </div>
@@ -112,4 +112,4 @@ const Signin = () => {
   )
 }
 
-export default Signin
+export default Signup
