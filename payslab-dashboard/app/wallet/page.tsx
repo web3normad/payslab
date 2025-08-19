@@ -63,7 +63,7 @@ const WalletBalanceCard = ({
   };
 
   return (
-    <Card className="bg-gradient-to-r from-[#8b61c2] to-[#7952a8] text-white border-0">
+    <Card className=" text-[#444444] border border-gray-200 shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
           <div className="p-2 bg-white bg-opacity-20 rounded-xl">
@@ -90,8 +90,8 @@ const WalletBalanceCard = ({
         <div className="text-right">
           {change && (
             <div className="flex items-center space-x-1 mb-2">
-              <TrendUp size={16} className="text-green-300" />
-              <span className="text-sm text-green-300">{change}</span>
+              <TrendUp size={16} className="text-green-600" />
+              <span className="text-sm text-green-600">{change}</span>
             </div>
           )}
           <div className="flex space-x-2">
@@ -257,7 +257,7 @@ const DepositModal = ({ isOpen, onClose, currency }: {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0.00"
-                className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:border-transparent"
+                className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#444444] focus:border-transparent"
               />
             </div>
           </div>
@@ -274,7 +274,7 @@ const DepositModal = ({ isOpen, onClose, currency }: {
                       value={method.id}
                       checked={selectedMethod === method.id}
                       onChange={(e) => setSelectedMethod(e.target.value)}
-                      className="text-[#8b61c2] focus:ring-[#8b61c2]"
+                      className="text-[#444444] focus:ring-[#444444]"
                     />
                     <span className="font-medium">{method.name}</span>
                   </div>
@@ -297,8 +297,8 @@ const DepositModal = ({ isOpen, onClose, currency }: {
           )}
 
           {currency === 'USDC' && (
-            <Card className="bg-purple-50 border-purple-200">
-              <h4 className="font-semibold text-purple-900 mb-2">USDC Deposit Address</h4>
+            <Card className="bg-purple-50 border-[#777777]">
+              <h4 className="font-semibold text-[#444444] mb-2">USDC Deposit Address</h4>
               <div className="flex items-center justify-between p-2 bg-white rounded-lg">
                 <span className="font-mono text-sm">0x1234...5678</span>
                 <Button size="small" variant="outline">
@@ -356,21 +356,21 @@ const WithdrawModal = ({ isOpen, onClose, currency }: {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0.00"
-                className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:border-transparent"
+                className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#444444] focus:border-transparent"
               />
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              {currency === 'NGN' ? 'Bank Account' : 'USDC Address'}
+              {currency === 'NGN' ? 'Bank Account' : 'USDC sAddress'}
             </label>
             <input
               type="text"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
               placeholder={currency === 'NGN' ? 'Account number' : '0x...'}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#444444] focus:border-transparent"
             />
           </div>
 
@@ -579,7 +579,7 @@ export default function WalletPage() {
                     onClick={() => setSelectedFilter(filter.id)}
                     className={`px-3 py-1 text-sm font-medium rounded-lg transition-colors ${
                       selectedFilter === filter.id
-                        ? 'bg-[#8b61c2] text-white'
+                        ? 'bg-[#444444] text-white'
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                   >

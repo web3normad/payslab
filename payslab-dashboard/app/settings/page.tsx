@@ -1,8 +1,9 @@
+"use client"
 import React, { useState } from 'react';
 import { Gear, Bell, Shield, Palette, Globe, CreditCard, Key, Database } from '@phosphor-icons/react';
-import Card from '../../components/ui/Card';
-import Button from '../../components/ui/Button';
-import StatusBadge from '../../components/ui/StatusBadge';
+import Card from '../components/ui/Card';
+import Button from '../components/ui/Button';
+import StatusBadge from '../components/ui/StatusBadge';
 
 const SettingsPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState('general');
@@ -64,8 +65,8 @@ const SettingsPage: React.FC = () => {
       </div>
       <button
         onClick={() => onChange(!enabled)}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:ring-offset-2 ${
-          enabled ? 'bg-[#8b61c2]' : 'bg-gray-200'
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#7777777] focus:ring-offset-2 ${
+          enabled ? 'bg-[#444444]' : 'bg-gray-200'
         }`}
       >
         <span
@@ -90,7 +91,7 @@ const SettingsPage: React.FC = () => {
                   <input
                     type="text"
                     defaultValue="PaySlab"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#444444] focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -98,7 +99,7 @@ const SettingsPage: React.FC = () => {
                   <input
                     type="email"
                     defaultValue="admin@payslab.com"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#444444] focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -106,12 +107,12 @@ const SettingsPage: React.FC = () => {
                   <input
                     type="url"
                     defaultValue="https://support.payslab.com"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#444444] focus:border-transparent"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
-                  <select className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:border-transparent">
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#444444] focus:border-transparent">
                     <option>UTC+1 (West Africa Time)</option>
                     <option>UTC (Greenwich Mean Time)</option>
                     <option>UTC-5 (Eastern Time)</option>
@@ -209,7 +210,7 @@ const SettingsPage: React.FC = () => {
                 <select 
                   value={settings.security.sessionTimeout}
                   onChange={(e) => updateSetting('security', 'sessionTimeout', e.target.value)}
-                  className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:border-transparent"
+                  className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#444444] focus:border-transparent"
                 >
                   <option value="15">15 minutes</option>
                   <option value="30">30 minutes</option>
@@ -257,7 +258,7 @@ const SettingsPage: React.FC = () => {
                     type="number"
                     value={settings.platform.minTradeAmount}
                     onChange={(e) => updateSetting('platform', 'minTradeAmount', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#444444] focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -266,7 +267,7 @@ const SettingsPage: React.FC = () => {
                     type="number"
                     value={settings.platform.maxTradeAmount}
                     onChange={(e) => updateSetting('platform', 'maxTradeAmount', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8b61c2] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#444444] focus:border-transparent"
                   />
                 </div>
               </div>
@@ -317,7 +318,7 @@ const SettingsPage: React.FC = () => {
                     onClick={() => setActiveSection(section.id)}
                     className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-left transition-all duration-200 ${
                       activeSection === section.id 
-                        ? 'bg-[#8b61c2] text-white shadow-md' 
+                        ? 'bg-[#444444] text-white shadow-md' 
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                   >
