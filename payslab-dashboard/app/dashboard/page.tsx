@@ -111,7 +111,7 @@ const RecentTradeCard = ({ trade }) => {
       <div className="mt-4 pt-3 border-t border-gray-100">
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div 
-            className="bg-[#8b61c2] h-2 rounded-full transition-all duration-300" 
+            className="bg-[linear-gradient(135deg,rgb(131,131,131)_-35%,rgba(41,41,41,0.34)_-20%,rgba(51,51,51,0.55)_-15%,rgb(47,47,47)_100%)] h-2 rounded-full transition-all duration-300" 
             style={{ width: `${trade.progress}%` }}
           ></div>
         </div>
