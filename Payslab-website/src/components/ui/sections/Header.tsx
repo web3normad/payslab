@@ -13,6 +13,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaLinkedin } from "react-icons/fa6";
 import { FaMedium } from "react-icons/fa6";
 import {motion} from "framer-motion"
+import Link from "next/link";
 
 const Header = () => {
   // FOR THE LANGUAGE DROPDOWN
@@ -175,7 +176,9 @@ const Header = () => {
           {/* BUTTON */}
           <div className='hidden lg:flex'>
             <button className='bg-black text-white cursor-pointer text-sm rounded-l-full font-medium lg:py-4 lg:px-12 hover:bg-gray-300 hover:text-black'>Sign Up</button>
-            <button className='bg-gray-300 text-black cursor-pointer text-sm rounded-full font-medium lg:py-4 lg:px-7 relative lg:right-8 hover:bg-white'>Sign In</button>
+              <Link  href={"/sign-in"}>
+              <button className='bg-gray-300 text-black cursor-pointer text-sm rounded-full font-medium lg:py-4 lg:px-7 relative lg:right-8 hover:bg-white'>Sign In</button>
+              </Link>
           </div>
           
           {/* MOBILE LOGIN */}
