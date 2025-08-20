@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import { Gavel, Clock, CheckCircle, XCircle, Warning } from '@phosphor-icons/react';
 import Card from '../components/ui/Card';
