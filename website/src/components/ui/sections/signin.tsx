@@ -2,47 +2,83 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useLoginWithEmail, usePrivy, User, PrivyErrorCode } from '@privy-io/react-auth';
-// Fixed: Use direct path for public assets (no @ prefix needed)
-const logo = "/images/Payslab-logo.svg";
+import { useLoginWithEmail, usePrivy } from '@privy-io/react-auth';
 import { FaRegEnvelope, FaGoogle, FaTwitter, FaTelegram } from "react-icons/fa6";
-import { FiUnlock } from "react-icons/fi";
+import { FiUnlock, FiBriefcase } from "react-icons/fi";
+
+const logo = "/images/Payslab-logo.svg";
 
 const Signin = () => {
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
+  const [businessName, setBusinessName] = useState('');
   const [isRedirecting, setIsRedirecting] = useState(false);
-  const router = useRouter();
+  const [showBusinessForm, setShowBusinessForm] = useState(false);
   const { ready, authenticated, login } = usePrivy();
+
+  // Dashboard URL - Update this with your deployed dashboard URL
+  const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL || 'https://your-dashboard-domain.vercel.app';
   
   const { sendCode, loginWithCode, state } = useLoginWithEmail({
     onComplete: (user, isNewUser) => {
       console.log('Email login successful:', user);
       console.log('Is new user:', isNewUser);
-      setIsRedirecting(true);
       
-      // Use Next.js router for smooth navigation within the same project
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 1000);
+      if (isNewUser) {
+        // For new users, show business name form
+        setShowBusinessForm(true);
+      } else {
+        // For existing users, check if business name exists
+        const savedBusinessName = localStorage.getItem('payslab_business_name');
+        if (!savedBusinessName) {
+          setShowBusinessForm(true);
+        } else {
+          // Redirect existing user with business name
+          handleSuccessfulLogin();
+        }
+      }
     },
     onError: (error) => {
       console.error('Login error:', error);
-      // Reset form on error
       setCode('');
     }
   });
 
+  const handleSuccessfulLogin = () => {
+    setIsRedirecting(true);
+    setTimeout(() => {
+      window.location.href = DASHBOARD_URL;
+    }, 1000);
+  };
+
+  const handleBusinessNameSubmit = () => {
+    if (!businessName.trim()) return;
+    
+    // Save business name to localStorage
+    localStorage.setItem('payslab_business_name', businessName.trim());
+    
+    // Also save email for navbar display
+    if (email) {
+      localStorage.setItem('payslab_user_email', email);
+    }
+    
+    handleSuccessfulLogin();
+  };
+
   // Handle successful authentication redirect
   useEffect(() => {
-    if (authenticated && !isRedirecting) {
-      setIsRedirecting(true);
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 500);
+    if (authenticated && !isRedirecting && !showBusinessForm) {
+      const savedBusinessName = localStorage.getItem('payslab_business_name');
+      if (savedBusinessName) {
+        setIsRedirecting(true);
+        setTimeout(() => {
+          window.location.href = DASHBOARD_URL;
+        }, 500);
+      } else {
+        setShowBusinessForm(true);
+      }
     }
-  }, [authenticated, isRedirecting, router]);
+  }, [authenticated, isRedirecting, showBusinessForm]);
 
   const handleEmailLogin = async () => {
     if (!email) return;
@@ -61,7 +97,6 @@ const Signin = () => {
       await loginWithCode({ code });
     } catch (error) {
       console.error('Error verifying code:', error);
-      // Reset code input on error
       setCode('');
     }
   };
@@ -70,7 +105,7 @@ const Signin = () => {
     login();
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent, action: () => void) => {
+  const handleKeyPress = (e, action) => {
     if (e.key === 'Enter') {
       action();
     }
@@ -88,12 +123,72 @@ const Signin = () => {
   }
 
   // Simple success message if authenticated
-  if (authenticated || isRedirecting) {
+  if (authenticated && isRedirecting) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-green-600 mb-4">Login Successful!</h1>
           <p className="text-gray-600">Taking you to dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Business name collection form
+  if (showBusinessForm) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-lg">
+          <div className="text-center mb-8">
+            <Image src={logo} alt='Logo Image' width={64} height={64} className="mx-auto mb-4"/>
+            <h1 className='font-bold text-xl'>PaySlab</h1>
+            <h2 className="text-2xl font-semibold mt-4 mb-2">Complete Your Profile</h2>
+            <p className="text-gray-600">Please provide your business information to continue</p>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className='font-medium block mb-2' htmlFor="businessName">
+                Business/Company Name
+              </label>
+              <div className="relative">
+                <FiBriefcase className='absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500' />
+                <input 
+                  id="businessName"
+                  type="text" 
+                  value={businessName}
+                  onChange={(e) => setBusinessName(e.target.value)}
+                  onKeyPress={(e) => handleKeyPress(e, handleBusinessNameSubmit)}
+                  className='bg-gray-200 p-3 pl-10 pr-4 rounded-md w-full outline-none focus:ring-2 focus:ring-black' 
+                  placeholder='Your Company Ltd.'
+                  autoFocus
+                />
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                This will be displayed in your dashboard and used for business verification
+              </p>
+            </div>
+
+            <button 
+              onClick={handleBusinessNameSubmit}
+              disabled={!businessName.trim()}
+              className='hover:bg-[#797979] disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer bg-black text-white font-medium w-full p-3 rounded-xl transition-colors'
+            >
+              Complete Setup
+            </button>
+
+            <button 
+              onClick={() => {
+                setShowBusinessForm(false);
+                setEmail('');
+                setCode('');
+                window.location.reload();
+              }}
+              className="w-full text-sm text-gray-500 hover:text-gray-700 underline"
+            >
+              Use different email
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -123,6 +218,7 @@ const Signin = () => {
               <p><strong>State:</strong> {state.status}</p>
               <p><strong>Authenticated:</strong> {authenticated ? 'Yes' : 'No'}</p>
               <p><strong>Ready:</strong> {ready ? 'Yes' : 'No'}</p>
+              <p><strong>Dashboard URL:</strong> {DASHBOARD_URL}</p>
             </div>
           )}
 
