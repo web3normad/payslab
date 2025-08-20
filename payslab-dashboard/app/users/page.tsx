@@ -1,5 +1,6 @@
+"use client";
 import React, { useState } from 'react';
-import { Plus, Filter, Users, MagnifyingGlass } from '@phosphor-icons/react';
+import { Plus, Funnel, Users, MagnifyingGlass } from '@phosphor-icons/react';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import UserCard from '../components/users/UserCard';
@@ -175,7 +176,7 @@ const UsersPage: React.FC = () => {
           
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="small">
-              <Filter size={16} className="mr-2" />
+              <Funnel size={16} className="mr-2" />
               Export
             </Button>
           </div>
