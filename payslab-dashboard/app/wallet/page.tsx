@@ -1,5 +1,7 @@
+// wallet/page.tsx (Fixed)
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { usePrivy } from '@privy-io/react-auth';
 import Layout from "../components/core/Layout";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
@@ -18,9 +20,8 @@ import {
   X,
   Bank,
   QrCode,
-  CaretDown,
-  TrendUp,
   ArrowsLeftRight,
+  TrendUp,
   Warning
 } from "@phosphor-icons/react";
 
@@ -63,7 +64,7 @@ const WalletBalanceCard = ({
   };
 
   return (
-    <Card className=" text-[#444444] border border-gray-200 shadow-sm">
+    <Card className="bg-gradient-to-br from-gray-700 to-gray-800 text-white border border-gray-200 shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
           <div className="p-2 bg-white bg-opacity-20 rounded-xl">
@@ -90,8 +91,8 @@ const WalletBalanceCard = ({
         <div className="text-right">
           {change && (
             <div className="flex items-center space-x-1 mb-2">
-              <TrendUp size={16} className="text-green-600" />
-              <span className="text-sm text-green-600">{change}</span>
+              <TrendUp size={16} className="text-green-400" />
+              <span className="text-sm text-green-400">{change}</span>
             </div>
           )}
           <div className="flex space-x-2">
@@ -217,7 +218,7 @@ const TransactionItem = ({ transaction }: { transaction: Transaction }) => {
   );
 };
 
-// Deposit Modal Component
+// Deposit Modal Component (FIXED)
 const DepositModal = ({ isOpen, onClose, currency }: {
   isOpen: boolean;
   onClose: () => void;
@@ -234,6 +235,18 @@ const DepositModal = ({ isOpen, onClose, currency }: {
   ] : [
     { id: 'crypto', name: 'USDC Transfer', fee: 'Network fees apply' }
   ];
+
+  const handleDeposit = () => {
+    if (!amount) return;
+    
+    // Here you would normally process the deposit
+    alert(`Deposit of ${amount} ${currency} initiated via ${selectedMethod}`);
+    
+    // Reset form and close modal
+    setAmount('');
+    setSelectedMethod(currency === 'NGN' ? 'bank_transfer' : 'crypto');
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -297,8 +310,8 @@ const DepositModal = ({ isOpen, onClose, currency }: {
           )}
 
           {currency === 'USDC' && (
-            <Card className="bg-purple-50 border-[#777777]">
-              <h4 className="font-semibold text-[#444444] mb-2">USDC Deposit Address</h4>
+            <Card className="bg-purple-50 border-purple-200">
+              <h4 className="font-semibold text-purple-900 mb-2">USDC Deposit Address</h4>
               <div className="flex items-center justify-between p-2 bg-white rounded-lg">
                 <span className="font-mono text-sm">0x1234...5678</span>
                 <Button size="small" variant="outline">
@@ -313,7 +326,7 @@ const DepositModal = ({ isOpen, onClose, currency }: {
             <Button variant="outline" onClick={onClose} className="flex-1">
               Cancel
             </Button>
-            <Button className="flex-1" disabled={!amount}>
+            <Button onClick={handleDeposit} className="flex-1" disabled={!amount}>
               {currency === 'NGN' ? 'Generate Instructions' : 'Copy Address'}
             </Button>
           </div>
@@ -323,7 +336,7 @@ const DepositModal = ({ isOpen, onClose, currency }: {
   );
 };
 
-// Withdraw Modal Component
+// Withdraw Modal Component (FIXED)
 const WithdrawModal = ({ isOpen, onClose, currency }: {
   isOpen: boolean;
   onClose: () => void;
@@ -333,6 +346,18 @@ const WithdrawModal = ({ isOpen, onClose, currency }: {
   const [destination, setDestination] = useState('');
 
   if (!isOpen) return null;
+
+  const handleWithdraw = () => {
+    if (!amount || !destination) return;
+    
+    // Here you would normally process the withdrawal
+    alert(`Withdrawal of ${amount} ${currency} initiated to ${destination}`);
+    
+    // Reset form and close modal
+    setAmount('');
+    setDestination('');
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -363,7 +388,7 @@ const WithdrawModal = ({ isOpen, onClose, currency }: {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              {currency === 'NGN' ? 'Bank Account' : 'USDC sAddress'}
+              {currency === 'NGN' ? 'Bank Account' : 'USDC Address'}
             </label>
             <input
               type="text"
@@ -407,7 +432,7 @@ const WithdrawModal = ({ isOpen, onClose, currency }: {
             <Button variant="outline" onClick={onClose} className="flex-1">
               Cancel
             </Button>
-            <Button className="flex-1" disabled={!amount || !destination}>
+            <Button onClick={handleWithdraw} className="flex-1" disabled={!amount || !destination}>
               Withdraw
             </Button>
           </div>
@@ -418,12 +443,20 @@ const WithdrawModal = ({ isOpen, onClose, currency }: {
 };
 
 export default function WalletPage() {
+  const { ready, authenticated } = usePrivy();
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [isNgnHidden, setIsNgnHidden] = useState(false);
   const [isUsdcHidden, setIsUsdcHidden] = useState(false);
   const [depositModalOpen, setDepositModalOpen] = useState(false);
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
   const [modalCurrency, setModalCurrency] = useState<'NGN' | 'USDC'>('USDC');
+
+  // Redirect to sign-in if not authenticated
+  useEffect(() => {
+    if (ready && !authenticated) {
+      window.location.href = '/sign-in';
+    }
+  }, [ready, authenticated]);
 
   // Sample transaction data
   const transactions: Transaction[] = [
@@ -504,6 +537,18 @@ export default function WalletPage() {
     setWithdrawModalOpen(true);
   };
 
+  // Show loading if not ready or not authenticated
+  if (!ready || !authenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading PaySlab...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Layout>
       <div className="p-6 w-full">
@@ -552,11 +597,19 @@ export default function WalletPage() {
                 <ArrowsLeftRight size={20} className="mr-2" />
                 Convert NGN to USDC
               </Button>
-              <Button variant="outline" className="flex items-center justify-center py-4">
+              <Button 
+                variant="outline" 
+                className="flex items-center justify-center py-4"
+                onClick={() => handleDeposit('NGN')}
+              >
                 <Plus size={20} className="mr-2" />
                 Deposit Funds
               </Button>
-              <Button variant="outline" className="flex items-center justify-center py-4">
+              <Button 
+                variant="outline" 
+                className="flex items-center justify-center py-4"
+                onClick={() => handleWithdraw('NGN')}
+              >
                 <Minus size={20} className="mr-2" />
                 Withdraw Funds
               </Button>

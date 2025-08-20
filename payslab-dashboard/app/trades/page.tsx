@@ -1,5 +1,6 @@
-"use client";
+'use client';
 import React, { useState, useMemo } from "react";
+import { useAccount } from 'wagmi';
 import Layout from "../components/core/Layout";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
@@ -17,24 +18,218 @@ import {
   Calendar,
   MapPin,
   Eye,
-  Package
+  Package,
+  Users,
+  Plus,
+  TrendUp
 } from "@phosphor-icons/react";
+
+// Import hooks
+import { 
+  useTrades, 
+  useTradeStats, 
+  useCreateTrade, 
+  useProcessMilestonePayment,
+  useUpdateTradeStatus,
+  useTradeDocuments,
+  useSuppliers,
+  useShippingTracking
+} from "../hooks/useTrades";
 
 // Trade data interface
 interface Trade {
-  id: string;
-  supplier: string;
-  product: string;
-  amount: string;
-  quantity: string;
-  destination: string;
-  status: 'In Transit' | 'Delivered' | 'Processing' | 'Pending Payment' | 'Disputed';
-  created: string;
-  expectedDelivery: string;
-  progress: number;
-  trackingNumber?: string;
-  documents?: string[];
+  id: string
+  supplier: string
+  product: string
+  amount: string
+  quantity: string
+  destination: string
+  status: 'In Transit' | 'Delivered' | 'Processing' | 'Pending Payment' | 'Disputed'
+  created: string
+  expectedDelivery: string
+  progress: number
+  trackingNumber?: string
+  documents?: string[]
+  smartContractId?: number
+  paymentMilestones?: any[]
 }
+
+// Create Trade Modal Component
+const CreateTradeModal = ({ isOpen, onClose }: {
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
+  const [productName, setProductName] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [amount, setAmount] = useState('');
+  const [destination, setDestination] = useState('');
+  const [selectedSupplier, setSelectedSupplier] = useState('');
+  const [deliveryTerms, setDeliveryTerms] = useState('FOB');
+  const [qualityRequirements, setQualityRequirements] = useState('');
+  const [expectedDelivery, setExpectedDelivery] = useState('');
+
+  const { data: suppliers = [] } = useSuppliers();
+  const { mutate: createTrade, isPending: isCreating } = useCreateTrade();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!selectedSupplier || !productName || !quantity || !amount) return;
+
+    createTrade({
+      supplierId: selectedSupplier,
+      productName,
+      quantity,
+      amount: parseFloat(amount),
+      destination,
+      deliveryTerms,
+      qualityRequirements,
+      expectedDelivery: new Date(expectedDelivery)
+    }, {
+      onSuccess: () => {
+        onClose();
+        // Reset form
+        setProductName('');
+        setQuantity('');
+        setAmount('');
+        setDestination('');
+        setSelectedSupplier('');
+        setExpectedDelivery('');
+        setQualityRequirements('');
+      }
+    });
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">Create New Trade</h2>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl">
+            <X size={20} />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Supplier</label>
+            <select
+              value={selectedSupplier}
+              onChange={(e) => setSelectedSupplier(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              <option value="">Select Supplier</option>
+              {suppliers.map((supplier) => (
+                <option key={supplier.id} value={supplier.id}>
+                  {supplier.name} ({supplier.country})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+              <input
+                type="text"
+                value={productName}
+                onChange={(e) => setProductName(e.target.value)}
+                placeholder="Smartphone Components"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+              <input
+                type="text"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                placeholder="100 units"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Amount (USD)</label>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="12500"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Destination</label>
+              <input
+                type="text"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                placeholder="Lagos, Nigeria"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Terms</label>
+              <select
+                value={deliveryTerms}
+                onChange={(e) => setDeliveryTerms(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="FOB">FOB (Free on Board)</option>
+                <option value="CIF">CIF (Cost, Insurance, Freight)</option>
+                <option value="CFR">CFR (Cost and Freight)</option>
+                <option value="EXW">EXW (Ex Works)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Expected Delivery</label>
+              <input
+                type="date"
+                value={expectedDelivery}
+                onChange={(e) => setExpectedDelivery(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Quality Requirements</label>
+            <textarea
+              value={qualityRequirements}
+              onChange={(e) => setQualityRequirements(e.target.value)}
+              placeholder="Specify quality standards and requirements..."
+              rows={3}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex space-x-3 pt-4">
+            <Button variant="outline" onClick={onClose} className="flex-1">
+              Cancel
+            </Button>
+            <Button type="submit" className="flex-1" disabled={isCreating}>
+              {isCreating ? 'Creating Trade...' : 'Create Trade'}
+            </Button>
+          </div>
+        </form>
+      </Card>
+    </div>
+  );
+};
 
 // Trade Modal Component
 const TradeModal = ({ isOpen, onClose, trade, onDownloadPDF }: {
@@ -43,6 +238,11 @@ const TradeModal = ({ isOpen, onClose, trade, onDownloadPDF }: {
   trade: Trade | null;
   onDownloadPDF: (tradeId: string, docType: string) => void;
 }) => {
+  const { data: documents = [] } = useTradeDocuments(trade?.id || '');
+  const { data: shippingData } = useShippingTracking(trade?.trackingNumber || '');
+  const { mutate: processMilestone } = useProcessMilestonePayment();
+  const { mutate: updateStatus } = useUpdateTradeStatus();
+
   if (!isOpen || !trade) return null;
 
   const statusColors = {
@@ -56,17 +256,18 @@ const TradeModal = ({ isOpen, onClose, trade, onDownloadPDF }: {
   const statusConfig = statusColors[trade.status];
   const StatusIcon = statusConfig.icon;
 
-  const documents = [
-    { name: 'Trade Agreement', type: 'agreement' },
-    { name: 'Invoice', type: 'invoice' },
-    { name: 'Bill of Lading', type: 'bill_of_lading' },
-    { name: 'Quality Certificate', type: 'quality_cert' },
-    { name: 'Shipping Documents', type: 'shipping_docs' }
-  ];
+  const handleMilestonePayment = (milestoneId: string, amount: number) => {
+    processMilestone({
+      tradeId: trade.id,
+      milestoneId,
+      supplierId: 'SUP-001', // Would get from trade data
+      amount
+    });
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <Card className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-start justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Trade #{trade.id}</h2>
@@ -77,113 +278,180 @@ const TradeModal = ({ isOpen, onClose, trade, onDownloadPDF }: {
               <StatusIcon size={16} className={statusConfig.text} />
               <span className={`text-sm font-medium ${statusConfig.text}`}>{trade.status}</span>
             </div>
-            <button 
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
-            >
+            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl">
               <X size={20} />
             </button>
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Trade Details */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Trade Details</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex items-center space-x-3">
-                <Package size={20} className="text-[#444444]" />
-                <div>
-                  <p className="text-sm text-gray-600">Product</p>
-                  <p className="font-medium">{trade.product}</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CurrencyDollar size={20} className="text-[#444444]" />
-                <div>
-                  <p className="text-sm text-gray-600">Amount</p>
-                  <p className="font-medium">{trade.amount}</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <MapPin size={20} className="text-[#444444]" />
-                <div>
-                  <p className="text-sm text-gray-600">Destination</p>
-                  <p className="font-medium">{trade.destination}</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Calendar size={20} className="text-[#444444]" />
-                <div>
-                  <p className="text-sm text-gray-600">Expected Delivery</p>
-                  <p className="font-medium">{trade.expectedDelivery}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Progress Bar */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Progress</h3>
-            <div className="w-full bg-gray-200 rounded-full h-3">
-              <div 
-                className="bg-[#444444] h-3 rounded-full transition-all duration-300" 
-                style={{ width: `${trade.progress}%` }}
-              ></div>
-            </div>
-            <p className="text-sm text-gray-500 mt-2">{trade.progress}% Complete</p>
-          </div>
-
-          {/* Tracking Information */}
-          {trade.trackingNumber && (
+          <div className="lg:col-span-2 space-y-6">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Tracking Information</h3>
-              <div className="bg-gray-50 rounded-xl p-4">
-                <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Trade Details</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center space-x-3">
+                  <Package size={20} className="text-[#444444]" />
                   <div>
-                    <p className="text-sm text-gray-600">Tracking Number</p>
-                    <p className="font-mono font-medium">{trade.trackingNumber}</p>
+                    <p className="text-sm text-gray-600">Product</p>
+                    <p className="font-medium">{trade.product}</p>
                   </div>
-                  <Button variant="outline" size="small">
-                    <Eye size={16} className="mr-1" />
-                    Track Package
-                  </Button>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CurrencyDollar size={20} className="text-[#444444]" />
+                  <div>
+                    <p className="text-sm text-gray-600">Amount</p>
+                    <p className="font-medium">{trade.amount}</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <MapPin size={20} className="text-[#444444]" />
+                  <div>
+                    <p className="text-sm text-gray-600">Destination</p>
+                    <p className="font-medium">{trade.destination}</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Calendar size={20} className="text-[#444444]" />
+                  <div>
+                    <p className="text-sm text-gray-600">Expected Delivery</p>
+                    <p className="font-medium">{trade.expectedDelivery}</p>
+                  </div>
                 </div>
               </div>
             </div>
-          )}
 
-          {/* Documents Section */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Trade Documents</h3>
-            <div className="grid grid-cols-1 gap-3">
-              {documents.map((doc) => (
-                <div key={doc.type} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <div className="flex items-center space-x-3">
-                    <FileText size={20} className="text-[#444444]" />
-                    <span className="font-medium">{doc.name}</span>
-                  </div>
-                  <Button
-                    onClick={() => onDownloadPDF(trade.id, doc.type)}
-                    variant="outline"
-                    size="small"
-                  >
-                    <DownloadSimple size={16} className="mr-1" />
-                    Download PDF
-                  </Button>
-                </div>
-              ))}
+            {/* Progress Bar */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Progress</h3>
+              <div className="w-full bg-gray-200 rounded-full h-3">
+                <div 
+                  className="bg-[#444444] h-3 rounded-full transition-all duration-300" 
+                  style={{ width: `${trade.progress}%` }}
+                ></div>
+              </div>
+              <p className="text-sm text-gray-500 mt-2">{trade.progress}% Complete</p>
             </div>
+
+            {/* Payment Milestones */}
+            {trade.paymentMilestones && (
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Payment Milestones</h3>
+                <div className="space-y-3">
+                  {trade.paymentMilestones.map((milestone) => (
+                    <div key={milestone.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                          milestone.status === 'completed' ? 'bg-green-100 text-green-600' :
+                          milestone.status === 'failed' ? 'bg-red-100 text-red-600' :
+                          'bg-gray-100 text-gray-600'
+                        }`}>
+                          {milestone.status === 'completed' ? <CheckCircle size={16} /> :
+                           milestone.status === 'failed' ? <X size={16} /> :
+                           <Clock size={16} />}
+                        </div>
+                        <div>
+                          <p className="font-medium">{milestone.description}</p>
+                          <p className="text-sm text-gray-600">${milestone.amount.toLocaleString()} ({milestone.percentage}%)</p>
+                        </div>
+                      </div>
+                      {milestone.status === 'pending' && (
+                        <Button
+                          size="small"
+                          onClick={() => handleMilestonePayment(milestone.id, milestone.amount)}
+                        >
+                          Pay Now
+                        </Button>
+                      )}
+                      {milestone.status === 'completed' && milestone.transactionHash && (
+                        <button
+                          onClick={() => window.open(`https://basescan.org/tx/${milestone.transactionHash}`, '_blank')}
+                          className="text-blue-600 hover:underline text-sm"
+                        >
+                          View TX
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Shipping Tracking */}
+            {trade.trackingNumber && shippingData && (
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Shipping Status</h3>
+                <div className="bg-gray-50 rounded-xl p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Tracking Number</p>
+                      <p className="font-mono font-medium">{trade.trackingNumber}</p>
+                    </div>
+                    <Button variant="outline" size="small">
+                      <Eye size={16} className="mr-1" />
+                      Track Package
+                    </Button>
+                  </div>
+                  <div className="space-y-3">
+                    {shippingData.events.map((event, index) => (
+                      <div key={index} className="flex items-start space-x-3">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">{event.description}</p>
+                          <p className="text-xs text-gray-500">{event.location} • {new Date(event.date).toLocaleDateString()}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex space-x-3 pt-4 border-t border-gray-200">
-            <Button className="flex-1">
-              Contact Supplier
-            </Button>
-            <Button variant="outline" className="flex-1">
-              Report Issue
-            </Button>
+          {/* Documents Sidebar */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Trade Documents</h3>
+              <div className="space-y-3">
+                {documents.map((doc) => (
+                  <div key={doc.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                    <div className="flex items-center space-x-3">
+                      <FileText size={20} className="text-[#444444]" />
+                      <div>
+                        <p className="font-medium text-sm">{doc.name}</p>
+                        <p className="text-xs text-gray-500">{new Date(doc.uploadedAt).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => onDownloadPDF(trade.id, doc.type)}
+                      variant="outline"
+                      size="small"
+                    >
+                      <DownloadSimple size={16} />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+              <div className="space-y-3">
+                <Button className="w-full justify-start">
+                  <Users size={16} className="mr-2" />
+                  Contact Supplier
+                </Button>
+                <Button variant="outline" className="w-full justify-start">
+                  <Warning size={16} className="mr-2" />
+                  Report Issue
+                </Button>
+                <Button variant="outline" className="w-full justify-start">
+                  <DownloadSimple size={16} className="mr-2" />
+                  Export Trade Data
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </Card>
@@ -252,12 +520,15 @@ const FilterDropdown = ({ options, onApplyFilters }: {
 };
 
 // Trade Card Component for stats
-const TradeCard = ({ title, value, highlight, isLoading = false }: {
+const TradeCard = ({ title, value, highlight, isLoading = false, icon: Icon }: {
   title: string;
   value: string | number;
   highlight?: string;
   isLoading?: boolean;
+  icon?: any;
 }) => {
+  const IconComponent = Icon || ShoppingBag;
+  
   return (
     <Card>
       <div className="flex items-center justify-between">
@@ -273,7 +544,7 @@ const TradeCard = ({ title, value, highlight, isLoading = false }: {
           )}
         </div>
         <div className="p-3 bg-[#444444] bg-opacity-10 rounded-xl">
-          <ShoppingBag size={24} className="text-[#444444]" />
+          <IconComponent size={24} className="text-[#444444]" />
         </div>
       </div>
     </Card>
@@ -281,77 +552,17 @@ const TradeCard = ({ title, value, highlight, isLoading = false }: {
 };
 
 export default function MyTrades() {
+  const { address } = useAccount();
   const [selectedTab, setSelectedTab] = useState('all');
   const [modalOpen, setModalOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
   const [selectedTradeId, setSelectedTradeId] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
-  // Sample trade data
-  const allTrades: Trade[] = [
-    {
-      id: 'TRD-001',
-      supplier: 'Shanghai Electronics Co.',
-      product: 'Smartphone Components',
-      amount: '$12,500',
-      quantity: '100 units',
-      destination: 'Lagos, Nigeria',
-      status: 'In Transit',
-      created: '2024-12-20',
-      expectedDelivery: 'Dec 28, 2024',
-      progress: 65,
-      trackingNumber: 'DHL1234567890'
-    },
-    {
-      id: 'TRD-002',
-      supplier: 'Dubai Textile Mills',
-      product: 'Cotton Fabric',
-      amount: '$8,200',
-      quantity: '50 meters',
-      destination: 'Kano, Nigeria',
-      status: 'Delivered',
-      created: '2024-12-10',
-      expectedDelivery: 'Dec 15, 2024',
-      progress: 100,
-      trackingNumber: 'FDX9876543210'
-    },
-    {
-      id: 'TRD-003',
-      supplier: 'German Machinery Ltd',
-      product: 'Industrial Equipment',
-      amount: '$25,000',
-      quantity: '1 unit',
-      destination: 'Abuja, Nigeria',
-      status: 'Processing',
-      created: '2024-12-22',
-      expectedDelivery: 'Jan 15, 2025',
-      progress: 25
-    },
-    {
-      id: 'TRD-004',
-      supplier: 'Indian Spice Exports',
-      product: 'Cashew Processing Equipment',
-      amount: '$15,800',
-      quantity: '1 set',
-      destination: 'Ilorin, Nigeria',
-      status: 'Pending Payment',
-      created: '2024-12-18',
-      expectedDelivery: 'Jan 05, 2025',
-      progress: 15
-    },
-    {
-      id: 'TRD-005',
-      supplier: 'Turkish Textile Co.',
-      product: 'Raw Materials',
-      amount: '$6,750',
-      quantity: '200 kg',
-      destination: 'Port Harcourt, Nigeria',
-      status: 'Disputed',
-      created: '2024-12-15',
-      expectedDelivery: 'Dec 25, 2024',
-      progress: 45
-    }
-  ];
+  // Hooks
+  const { data: trades = [], isLoading: tradesLoading } = useTrades();
+  const { data: tradeStats, isLoading: statsLoading } = useTradeStats();
 
   // Filter options
   const filterOptions = [
@@ -364,7 +575,7 @@ export default function MyTrades() {
 
   // Filter trades based on search and filters
   const filteredTrades = useMemo(() => {
-    let filtered = allTrades;
+    let filtered = trades;
 
     // Apply search filter
     if (searchQuery.trim()) {
@@ -395,16 +606,7 @@ export default function MyTrades() {
     }
 
     return filtered;
-  }, [allTrades, searchQuery, selectedTab, activeFilters]);
-
-  // Calculate statistics
-  const totalTrades = allTrades.length;
-  const activeTrades = allTrades.filter(t => ['In Transit', 'Processing', 'Pending Payment'].includes(t.status)).length;
-  const completedTrades = allTrades.filter(t => t.status === 'Delivered').length;
-  const totalValue = allTrades.reduce((sum, trade) => {
-    const value = parseFloat(trade.amount.replace('$', '').replace(',', ''));
-    return sum + value;
-  }, 0);
+  }, [trades, searchQuery, selectedTab, activeFilters]);
 
   const handleApplyFilters = (selectedFilters: string[]) => {
     setActiveFilters(selectedFilters);
@@ -430,7 +632,7 @@ export default function MyTrades() {
   };
 
   const selectedTrade = selectedTradeId 
-    ? allTrades.find(trade => trade.id === selectedTradeId)
+    ? trades.find(trade => trade.id === selectedTradeId)
     : null;
 
   // Get status color configuration
@@ -450,24 +652,54 @@ export default function MyTrades() {
       <div className="p-6 w-full">
         <div className="w-full max-w-8xl mx-auto">
           
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">My Trades</h1>
+              <p className="text-gray-600 mt-1">Manage and track your international trade transactions</p>
+            </div>
+            <Button onClick={() => setCreateModalOpen(true)}>
+              <Plus size={20} className="mr-2" />
+              Create Trade
+            </Button>
+          </div>
+          
           {/* Statistics Cards */}
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <TradeCard 
               title="Total Trades"
-              value={totalTrades}
-              highlight={`$${totalValue.toLocaleString()} total value`}
+              value={tradeStats?.totalTrades || 0}
+              highlight={`$${tradeStats?.totalValue.toLocaleString() || 0} total value`}
+              isLoading={statsLoading}
+              icon={ShoppingBag}
             />
             <TradeCard 
               title="Active Trades"
-              value={activeTrades}
-              highlight={`${completedTrades} completed`}
+              value={tradeStats?.activeTrades || 0}
+              highlight={`${tradeStats?.completedTrades || 0} completed`}
+              isLoading={statsLoading}
+              icon={Truck}
+            />
+            <TradeCard 
+              title="Success Rate"
+              value={`${tradeStats?.successRate.toFixed(1) || 0}%`}
+              highlight="Last 30 days"
+              isLoading={statsLoading}
+              icon={TrendUp}
+            />
+            <TradeCard 
+              title="Avg. Trade Value"
+              value={`$${tradeStats?.averageValue.toLocaleString() || 0}`}
+              highlight="Per transaction"
+              isLoading={statsLoading}
+              icon={CurrencyDollar}
             />
           </div>
           
           {/* Search, Filter and Tab Navigation */}
           <div className="flex justify-between items-center mb-6">
             {/* Search and Filter on the left */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <MagnifyingGlass size={20} className="text-gray-400" />
@@ -476,7 +708,7 @@ export default function MyTrades() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="block w-[250px] pl-10 pr-3 py-2 border border-gray-300 rounded-xl bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#444444]"
+                  className="block w-[300px] pl-10 pr-3 py-2 border border-gray-300 rounded-xl bg-gray-50 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#444444] focus:bg-white"
                   placeholder="Search trades..."
                 />
               </div>
@@ -532,7 +764,7 @@ export default function MyTrades() {
               })}
               <button 
                 onClick={() => setActiveFilters([])}
-                className="text-xs text-red-500"
+                className="text-xs text-red-500 hover:text-red-700"
               >
                 Clear all
               </button>
@@ -540,119 +772,167 @@ export default function MyTrades() {
           )}
 
           {/* Trades Table */}
-          <div className="w-full">
-            <div className="overflow-y-auto max-h-[510px] border rounded-lg bg-white border-gray-200">
-              <table className="min-w-full table-fixed">
-                <thead className="sticky top-0 bg-gray-100">
-                  <tr>
-                    <th className="py-4 text-left text-xs font-medium uppercase pl-6 w-32 text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <FileText size={16} className="text-gray-600" />
-                        <span>Trade ID</span>
-                      </div>
-                    </th>
-                    <th className="py-4 text-left text-xs font-medium uppercase pl-4 w-48 text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <ShoppingBag size={16} className="text-gray-600" />
-                        <span>Supplier</span>
-                      </div>
-                    </th>
-                    <th className="py-4 text-left text-xs font-medium uppercase pl-4 w-40 text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <Package size={16} className="text-gray-600" />
-                        <span>Product</span>
-                      </div>
-                    </th>
-                    <th className="py-4 text-left text-xs font-medium uppercase pl-4 w-28 text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <CurrencyDollar size={16} className="text-gray-600" />
-                        <span>Amount</span>
-                      </div>
-                    </th>
-                    <th className="py-4 text-left text-xs font-medium uppercase pl-4 w-36 text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <MapPin size={16} className="text-gray-600" />
-                        <span>Destination</span>
-                      </div>
-                    </th>
-                    <th className="py-4 text-left text-xs font-medium uppercase pl-4 w-32 text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <Clock size={16} className="text-gray-600" />
-                        <span>Status</span>
-                      </div>
-                    </th>
-                    <th className="py-4 text-left text-xs font-medium uppercase pl-4 w-32 text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <Calendar size={16} className="text-gray-600" />
-                        <span>Expected</span>
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y bg-white divide-gray-200">
-                  {filteredTrades.map((trade) => {
-                    const statusConfig = getStatusConfig(trade.status);
-                    return (
-                      <tr 
-                        key={trade.id}
-                        onClick={() => handleRowClick(trade.id)}
-                        className="hover:bg-gray-50 cursor-pointer transition-colors"
-                      >
-                        <td className="py-4 pl-6 text-sm font-medium text-gray-900">
-                          {trade.id}
-                        </td>
-                        <td className="py-4 pl-4 text-sm text-gray-800">
-                          <div className="truncate max-w-[180px]" title={trade.supplier}>
-                            {trade.supplier}
-                          </div>
-                        </td>
-                        <td className="py-4 pl-4 text-sm text-gray-800">
-                          <div className="truncate max-w-[150px]" title={trade.product}>
-                            {trade.product}
-                          </div>
-                        </td>
-                        <td className="py-4 pl-4 text-sm font-medium text-gray-900">
-                          {trade.amount}
-                        </td>
-                        <td className="py-4 pl-4 text-sm text-gray-800">
-                          {trade.destination}
-                        </td>
-                        <td className="py-4 pl-4 text-sm">
-                          <span className={`flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusConfig.bg} ${statusConfig.text}`}>
-                            <span className={`w-2 h-2 rounded-full mr-2 ${statusConfig.dot}`}></span>
-                            {trade.status}
-                          </span>
-                        </td>
-                        <td className="py-4 pl-4 text-sm text-gray-800">
-                          {trade.expectedDelivery}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+          <Card className="overflow-hidden">
+            {tradesLoading ? (
+              <div className="p-8 text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#444444] mx-auto"></div>
+                <p className="text-gray-500 mt-4">Loading trades...</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="flex items-center gap-2">
+                          <FileText size={16} />
+                          Trade ID
+                        </div>
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="flex items-center gap-2">
+                          <Users size={16} />
+                          Supplier
+                        </div>
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="flex items-center gap-2">
+                          <Package size={16} />
+                          Product
+                        </div>
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="flex items-center gap-2">
+                          <CurrencyDollar size={16} />
+                          Amount
+                        </div>
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="flex items-center gap-2">
+                          <MapPin size={16} />
+                          Destination
+                        </div>
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="flex items-center gap-2">
+                          <Clock size={16} />
+                          Status
+                        </div>
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="flex items-center gap-2">
+                          <Calendar size={16} />
+                          Expected
+                        </div>
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Progress
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {filteredTrades.map((trade) => {
+                      const statusConfig = getStatusConfig(trade.status);
+                      return (
+                        <tr 
+                          key={trade.id}
+                          onClick={() => handleRowClick(trade.id)}
+                          className="hover:bg-gray-50 cursor-pointer transition-colors"
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-900">{trade.id}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{trade.supplier}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{trade.product}</div>
+                            <div className="text-sm text-gray-500">{trade.quantity}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-900">{trade.amount}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{trade.destination}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusConfig.bg} ${statusConfig.text}`}>
+                              <span className={`w-2 h-2 rounded-full mr-1.5 ${statusConfig.dot}`}></span>
+                              {trade.status}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {trade.expectedDelivery}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="w-full bg-gray-200 rounded-full h-2 mr-2">
+                                <div 
+                                  className="bg-[#444444] h-2 rounded-full" 
+                                  style={{ width: `${trade.progress}%` }}
+                                ></div>
+                              </div>
+                              <span className="text-xs text-gray-500 min-w-[3rem]">{trade.progress}%</span>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
 
-            {/* Empty State */}
-            {filteredTrades.length === 0 && (
-              <div className="text-center py-12">
-                <ShoppingBag size={48} className="text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No trades found</h3>
-                <p className="text-gray-600">
-                  {searchQuery ? `No trades match "${searchQuery}"` : `No ${selectedTab} trades found`}
-                </p>
+                {/* Empty State */}
+                {filteredTrades.length === 0 && !tradesLoading && (
+                  <div className="text-center py-12">
+                    <ShoppingBag size={48} className="text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No trades found</h3>
+                    <p className="text-gray-600 mb-4">
+                      {searchQuery ? `No trades match "${searchQuery}"` : `No ${selectedTab} trades found`}
+                    </p>
+                    {!searchQuery && selectedTab === 'all' && (
+                      <Button onClick={() => setCreateModalOpen(true)}>
+                        <Plus size={16} className="mr-2" />
+                        Create Your First Trade
+                      </Button>
+                    )}
+                  </div>
+                )}
               </div>
             )}
-          </div>
+          </Card>
+
+          {/* Pagination */}
+          {filteredTrades.length > 0 && (
+            <div className="flex items-center justify-between mt-6">
+              <div className="text-sm text-gray-700">
+                Showing <span className="font-medium">1</span> to <span className="font-medium">{filteredTrades.length}</span> of{' '}
+                <span className="font-medium">{trades.length}</span> trades
+              </div>
+              <div className="flex space-x-2">
+                <Button variant="outline" size="small" disabled>
+                  Previous
+                </Button>
+                <Button variant="outline" size="small" disabled>
+                  Next
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Trade Modal */}
+      {/* Trade Detail Modal */}
       <TradeModal
         isOpen={modalOpen}
         onClose={closeModal}
         trade={selectedTrade}
         onDownloadPDF={handleDownloadPDF}
+      />
+
+      {/* Create Trade Modal */}
+      <CreateTradeModal
+        isOpen={createModalOpen}
+        onClose={() => setCreateModalOpen(false)}
       />
     </Layout>
   );

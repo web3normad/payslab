@@ -1,11 +1,13 @@
 'use client';
 
-import React from 'react';
-import { 
-  House, 
-  ArrowsLeftRight, 
-  ShoppingBag, 
-  FileText, 
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import Logo from '@/public/Payslab-logo.svg'; 
+import {
+  House,
+  ArrowsLeftRight,
+  ShoppingBag,
+  FileText,
   Wallet,
   Gear,
   CurrencyDollar
@@ -18,6 +20,43 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
+  const [currentTime, setCurrentTime] = useState("");
+  const [currentDate, setCurrentDate] = useState("");
+
+  useEffect(() => {
+    // Set initial date/time
+    setCurrentDate(
+      new Date().toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      })
+    );
+
+    setCurrentTime(
+      new Date().toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+    );
+
+    // Update time every minute
+    const interval = setInterval(() => {
+      setCurrentTime(
+        new Date().toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })
+      );
+    }, 60000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   const navItems = [
     { id: 'dashboard', label: 'Overview', icon: House },
     { id: 'convert', label: 'Convert NGN', icon: ArrowsLeftRight },
@@ -30,8 +69,20 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
   return (
     <div className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 p-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[#373941]">PaySlab</h1>
-        <p className="text-sm text-gray-500">Trade Platform</p>
+        {/* Logo and Title */}
+        <div className="flex items-center gap-3 mb-2">
+          <div className="relative w-8 h-8 flex-shrink-0">
+            {/* Replace with your actual logo or use placeholder */}
+            <Image src={Logo} alt="PaySlab Logo" layout="fill" objectFit="contain" />
+          </div>
+          <h1 className="text-2xl font-bold text-[#373941]" style={{ fontFamily: 'ClashDisplay-Bold, sans-serif' }}>
+            PaySlab
+          </h1>
+        </div>
+        {/* Date and Time */}
+        <div className="text-sm text-gray-400 mt-1">
+          {currentDate} | {currentTime}
+        </div>
       </div>
       
       <nav className="space-y-2">
@@ -48,7 +99,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
               }`}
             >
               <Icon size={20} />
-              <span className="font-medium">{item.label}</span>
+              <span className="font-medium" style={{ fontFamily: 'ClashDisplay-Bold, sans-serif' }}>
+                {item.label}
+              </span>
             </button>
           );
         })}
@@ -60,7 +113,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
             <CurrencyDollar size={24} />
             <div>
               <p className="text-sm font-medium">USDC Balance</p>
-              <p className="text-lg font-bold">$2,450.00</p>
+              <p className="text-lg font-bold" style={{ fontFamily: 'ClashDisplay-Bold, sans-serif' }}>
+                $2,450.00
+              </p>
             </div>
           </div>
         </Card>
