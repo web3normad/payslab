@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import logo from "@/public/images/logo.webp"
+import logo from "@/public/images/logo.png"
 import { FaXTwitter } from "react-icons/fa6";
 import { FaLinkedin } from "react-icons/fa6";
 import { FaMedium } from "react-icons/fa6";

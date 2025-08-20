@@ -1,7 +1,7 @@
 'use client'
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import Image from 'next/image'
-import logo from "@/public/images/logo.webp"
+import logo from "@/public/images/logo.png"
 import { useState, useRef, useEffect } from 'react';
 import NavMenu from "@/src/components/Buttons/NavMenu";
 import NavAcc from "@/src/components/Buttons/NavAcc";
@@ -175,7 +175,11 @@ const Header = () => {
 
           {/* BUTTON */}
           <div className='hidden lg:flex'>
-            <button className='bg-black text-white cursor-pointer text-sm rounded-l-full font-medium lg:py-4 lg:px-12 hover:bg-gray-300 hover:text-black'>Sign Up</button>
+           
+            <Link href={"/sign-up"}>
+               <button className='bg-black text-white cursor-pointer text-sm rounded-l-full font-medium lg:py-4 lg:px-12 hover:bg-gray-300 hover:text-black'>Sign Up</button>
+               </Link>
+
               <Link  href={"/sign-in"}>
               <button className='bg-gray-300 text-black cursor-pointer text-sm rounded-full font-medium lg:py-4 lg:px-7 relative lg:right-8 hover:bg-white'>Sign In</button>
               </Link>
