@@ -11,9 +11,9 @@ const HowItWorks: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center mt-20 sm:mt-40 relative px-4 lg:px-20 sm:px-8">
       {/* <div className="mb-20 mt-10">
-        <h1 className="text-2xl font-semibold lg:text-[80px]">How it works</h1>
-        <h1 className="text-2xl relative bottom-2 lg:bottom-14 font-semibold opacity-20 rotate-180 lg:text-[80px]">How it works</h1>
-      </div> */}
+       <h1 className="text-2xl font-semibold lg:text-[80px]">How it works</h1>
+       <h1 className="text-2xl relative bottom-2 lg:bottom-14 font-semibold opacity-20 rotate-180 lg:text-[80px]">How it works</h1>
+     </div> */}
       <div className="text-center">
         <h1 className="font-bold uppercase text-4xl sm:text-6xl lg:text-9xl">
           A new way to
@@ -54,7 +54,10 @@ const HowItWorks: React.FC = () => {
             Open multi-currency accounts from anywhere. Send, receive, hold and
             exchange digital currencies instantly at the real exchange rate.
           </p>
-          <Link href="#" className="text-blue-700 text-lg sm:text-2xl hover:underline">
+          <Link
+            href="#"
+            className="text-blue-700 text-lg sm:text-2xl w-90 hover:underline"
+          >
             Learn about Global Accounts →
           </Link>
         </div>
@@ -69,7 +72,7 @@ const HowItWorks: React.FC = () => {
           />
         </div>
 
-        <div className="flex flex-col mt-6 sm:mt-10 mb-10 sm:mb-20">
+        <div className="flex flex-col mt-6 sm:mt-10 sm:mb-20">
           <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-4">
             Accept payments everywhere
           </h2>
@@ -78,31 +81,27 @@ const HowItWorks: React.FC = () => {
             and more in 80+ markets. Receive stablecoins instantly or settle
             into your local currency. Near-zero fees.
           </p>
-          <Link href="#" className="text-blue-700 text-lg sm:text-2xl hover:underline">
+          <Link
+            href="#"
+            className="text-blue-700 text-lg sm:text-2xl w-72 hover:underline"
+          >
             Learn about Payments →
           </Link>
         </div>
-      </div>
-      <div className="flex flex-col bg-blue-600 w-full lg:py-14  sm:py-8  sm:px-8">
-        <video
-          src="/images/transfers-desktop-new.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="object-cover w-full  sm:h-[800px]"
-        />
-        <div className="flex flex-col mt-6 sm:mt-10 p-4">
-          <h2 className="text-2xl sm:text-3xl font-medium text-gray-50 mb-4">
+        <div className="flex flex-col mt-6 sm:mt-10">
+          <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-4">
             Move money globally in seconds
           </h2>
-          <p className="text-lg sm:text-2xl max-w-2xl text-gray-300 mb-4">
+          <p className="text-lg sm:text-2xl max-w-xl text-neutral-700 mb-4">
             Transfer funds faster to and from your digital accounts via bank
             transfers or mobile wallets in 80+ countries. Enjoy real-time
             payments at a fraction of the cost of bank wires.
           </p>
-          <Link href="#" className="text-gray-50 text-lg sm:text-2xl hover:underline">
-            Learn about Transfers →
+          <Link
+            href="#"
+            className="text-blue-700 text-lg sm:text-2xl w-72 hover:underline"
+          >
+            Learn about Transfers→
           </Link>
         </div>
       </div>
