@@ -2,21 +2,16 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import Image from "next/image";
 
-const words: string[] = ["Pay", "Send", "Receive", "Exchange", "Get paid"];
+const words: string[] = ["Pay", "Send", "Receive", "Ship", "Get Paid"];
 
 const HowItWorks: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center mt-20 sm:mt-40 relative px-4 lg:px-20 sm:px-8">
-      {/* <div className="mb-20 mt-10">
-       <h1 className="text-2xl font-semibold lg:text-[80px]">How it works</h1>
-       <h1 className="text-2xl relative bottom-2 lg:bottom-14 font-semibold opacity-20 rotate-180 lg:text-[80px]">How it works</h1>
-     </div> */}
       <div className="text-center">
-        <h1 className="font-bold uppercase text-4xl sm:text-6xl lg:text-9xl">
-          A new way to
+        <h1 className="font-bold uppercase text-4xl sm:text-6xl lg:text-8xl">
+          A smarter way <br /> to
         </h1>
         {words.map((word, i) => (
           <motion.h1
@@ -28,7 +23,7 @@ const HowItWorks: React.FC = () => {
               delay: i * 0.3,
             }}
             viewport={{ once: false, amount: 0.8 }}
-            className="font-bold uppercase text-4xl sm:text-6xl lg:text-9xl text-blue-700"
+            className="font-bold uppercase text-4xl sm:text-6xl lg:text-8xl text-blue-700"
           >
             {word}
           </motion.h1>
@@ -36,6 +31,7 @@ const HowItWorks: React.FC = () => {
       </div>
 
       <div className="mt-20 sm:mt-40 flex flex-col">
+        {/* Borderless Accounts */}
         <div className="py-2 w-full flex items-center justify-center">
           <Image
             src="/images/f95372c9-ca69-4e53-85fb-65b2ad89b8ec.jpeg"
@@ -51,16 +47,13 @@ const HowItWorks: React.FC = () => {
             Borderless multi-currency accounts
           </h2>
           <p className="text-lg sm:text-2xl max-w-2xl text-neutral-700 mb-4">
-            Open multi-currency accounts from anywhere. Send, receive, hold and
-            exchange digital currencies instantly at the real exchange rate.
+            Open multi-currency accounts for your shipping or trading business.
+            Send, receive, hold, and exchange funds globally — without high bank
+            fees or hidden charges.
           </p>
-          <Link
-            href="#"
-            className="text-blue-700 text-lg sm:text-2xl w-90 hover:underline"
-          >
-            Learn about Global Accounts →
-          </Link>
         </div>
+
+        {/* Accept Payments */}
         <div className="flex justify-center items-center flex-col mt-8 sm:mt-12">
           <video
             src="/images/accept-payments-new-loop.mp4"
@@ -71,38 +64,27 @@ const HowItWorks: React.FC = () => {
             className="rounded-2xl w-full h-auto object-cover"
           />
         </div>
-
         <div className="flex flex-col mt-6 sm:mt-10 sm:mb-20">
           <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-4">
             Accept payments everywhere
           </h2>
           <p className="text-lg sm:text-2xl max-w-2xl text-neutral-700 mb-4">
-            Get paid anywhere - bank transfers, mobile money, digital wallets
-            and more in 80+ markets. Receive stablecoins instantly or settle
-            into your local currency. Near-zero fees.
+            Get paid instantly by clients, suppliers, or logistics partners.
+            From digital wallets to bank transfers, receive payments in 80+
+            markets and settle in your preferred currency.
           </p>
-          <Link
-            href="#"
-            className="text-blue-700 text-lg sm:text-2xl w-72 hover:underline"
-          >
-            Learn about Payments →
-          </Link>
         </div>
-        <div className="flex flex-col mt-6 sm:mt-10">
+
+        {/* Global Transfers */}
+        <div className="flex flex-col sm:mt-10">
           <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-4">
             Move money globally in seconds
           </h2>
           <p className="text-lg sm:text-2xl max-w-xl text-neutral-700 mb-4">
-            Transfer funds faster to and from your digital accounts via bank
-            transfers or mobile wallets in 80+ countries. Enjoy real-time
-            payments at a fraction of the cost of bank wires.
+            Pay carriers, vendors, and partners worldwide in seconds. Our
+            low-cost, real-time transfers keep your shipping operations smooth
+            and your cash flow predictable.
           </p>
-          <Link
-            href="#"
-            className="text-blue-700 text-lg sm:text-2xl w-72 hover:underline"
-          >
-            Learn about Transfers→
-          </Link>
         </div>
       </div>
     </div>
