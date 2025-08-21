@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 
 const Hero = () => {
   return (
-    <section>
-      <div className="  sm:px-5 lg:px-20  text-[#2E2E2E] text-[80px] md:text-[148px]  2xl:text-[212px] tracking-tighter font-bold  max-w-[1920px]  py-0  mx-auto grid place-items-center 2xl:place-items-start 2xl:-mt-10">
-        {/* make */}
+    <section className="">
+      <div className="  sm:px-5 lg:px-20  text-[#2E2E2E] text-[70px] sm:text-[80px] md:text-[148px]  2xl:text-[212px] tracking-tighter font-bold  max-w-[1920px] grid place-items-center 2xl:place-items-start  py-0  mx-auto 2xl:-mt-10">
+        <div>
+          {/* make */}
         <div className="flex gap-4 md:gap-8 items-center  mt-28 md:mt-20 ">
           <motion.h1
             initial={{ y: -50, opacity: 0 }}
@@ -18,7 +19,7 @@ const Hero = () => {
             Make
           </motion.h1>
           <motion.div
-            className=" w-48 h-14 md:w-52 md:h-20 2xl:w-76 2xl:h-28 mt-4 md:mt-10 relative"
+            className=" w-40 sm:w-48 h-14 md:w-52 md:h-20 2xl:w-76 2xl:h-28 mt-4 md:mt-10 relative"
             initial={{ opacity: 0, y: -50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
@@ -75,7 +76,7 @@ const Hero = () => {
           </motion.div>
         </div>
         {/* second */}
-        <div className="flex gap-8 items-center 2xl:pl-30 -mt-10 md:-mt-24 xl:-mt-32">
+        <div className="flex gap-8 items-center 2xl:pl-30 -mt-10 md:-mt-24 xl:-mt-28">
           <motion.div
             className="hidden lg:flex items-center justify-center p-4 size-24 rounded-2xl bg-white shadow-2xl "
             initial={{ opacity: 0, x: -200 }}
@@ -106,9 +107,9 @@ const Hero = () => {
         </div>
 
         {/* third */}
-        <div className="flex gap-4 md:gap-8 items-center xl:pl-60  2xl:pl-180  -mt-10 md:-mt-24  xl:-mt-32 mb-28 ">
+        <div className="flex gap-4 md:gap-8 items-center xl:pl-60  2xl:pl-180  -mt-10 md:-mt-24  xl:-mt-28 mb-28 ">
           <motion.div
-            className="w-48 h-14 md:w-52 md:h-20 2xl:w-76 2xl:h-28  mt-4 md:mt-10 relative "
+            className="w-40 sm:w-48 h-14 md:w-52 md:h-20 2xl:w-76 2xl:h-28  mt-4 md:mt-10 relative "
             initial={{ opacity: 0, y: -50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
@@ -173,9 +174,10 @@ const Hero = () => {
             move
           </motion.h1>
         </div>
+        </div>
       </div>
       {/* for waitlist */}
-      <div className="px-5 lg:px-20  xl:text-2xl mx-auto md:mx-0 flex flex-col items-center md:items-start gap-6 md:-mt-26 2xl-mt-60">
+      <div className="px-5 lg:px-20  xl:text-2xl mx-auto md:mx-0 flex flex-col items-center md:items-start gap-6 md:-mt-26 xl:-mt-20 2xl:-mt-60">
         <p className="text-[#898D91E6]  w-[300px] xl:w-[400px] text-center md:text-left 2xl:leading-relaxed">
           Experience a new affordable and efficient way to send and receive
           digital payments worldwide
