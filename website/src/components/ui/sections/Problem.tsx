@@ -70,10 +70,10 @@ const Problem = () => {
         {problems.map((problem, index) => (
           <div
             key={index}
-            className="p-8 bg-gray-100 rounded-md shadow-md  cursor-pointer flex flex-col"
+            className="p-10 lg:p-14 bg-gray-100 rounded-md shadow-md  cursor-pointer flex flex-col"
           >
             <div className="flex items-start gap-4">
-              <div className="text-2xl text-[#444444]">{problem.icon}</div>
+              <div className="text-2xl text-[#444444] rounded-2xl lg:text-4xl">{problem.icon}</div>
               <div>
                 <h3 className="font-bold text-xl mb-2">{problem.title}</h3>
                 <p className="text-md">{problem.description}</p>
