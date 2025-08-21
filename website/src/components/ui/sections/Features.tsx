@@ -29,13 +29,13 @@ const Features = () => {
 
  </div>
       {/* Left side */}
-      <div className="flex-1 px-16 py-10 flex flex-col justify-center text-black lg:-mt-60">
+      <div className="flex-1 px-5 py-10 flex flex-col justify-center text-black lg:-mt-60">
         <h1 className="font-extrabold text-[36px] md:text-[60px] leading-tight m-0">
           Your transfers
           <br />
           just got global
         </h1>
-        <strong className="mt-4 text-[22px]">Enter multi-currency accounts</strong>
+        <strong className="mt-7 text-[22px]">Enter multi-currency accounts</strong>
         <p className="mt-2 text-[14px] lg:w-[400px] lg:text-[20px] text-gray-400">
           Seamlessly transfer funds to over 60 countries, with support for both fiat and digital
           currencies.
@@ -44,7 +44,7 @@ const Features = () => {
 
       {/* Right side */}
       <div
-        className="flex-1 relative flex flex-col justify-between p-8 text-white font-semibold text-sm rounded-tr-[24px] rounded-br-[24px] w-[400px]"
+        className="flex-1 relative flex flex-col justify-between p-8 text-white font-semibold text-sm  rounded-br-[24px] h-[150px] lg:h-[800px] rounded-tr-[24px] w-[400px]"
         style={{
           backgroundImage:
             'url("https://framerusercontent.com/images/szMdJ1k7ngrAgHVj7MLZmBF0TU.png")',
@@ -79,7 +79,7 @@ const Features = () => {
 
 
 
-        <div className="relative lg:right-0 bottom-10 right-8 lg:self-end text-right font-medium text-[80px] lg:text-[250px] leading-none drop-shadow-lg">
+        <div className="relative lg:right-0 bottom-3 lg:bottom-0 right-8 lg:self-end text-right font-medium text-[80px] lg:text-[250px] leading-none drop-shadow-lg">
           60
           <span className=" text-[30px] lg:text-[68px] ml-1">+</span>
           <div className=" text-[12px] lg:text-[22px] font-normal lg:mt-[-1rem]">Available Supported Countries</div>
@@ -92,18 +92,20 @@ const Features = () => {
 
      <div className="flex flex-col lg:flex-row rounded-[24px] overflow-hidden h-[800px] mb-2 font-sans bg-white lg:mx-20 ">
       {/* Left side */}
-      <div className="flex-1 px-16 py-10 flex flex-col justify-center text-black lg:-mt-60">
+      <div className="flex-1 px-5 py-10 flex flex-col justify-center text-black lg:-mt-60">
         <h1 className="font-extrabold text-[36px] lg:text-[60px] leading-tight m-0">
-          Send money to loved 
-          <br />
-          ones in an instant
-        </h1>
-        <strong className="mt-4 text-[22px]">No more waiting days, just seconds</strong>
-        <p className="mt-2 text-[14px] lg:w-[400px] lg:text-[20px] text-gray-400">
-         Embrace instant stablecoins such 
-         as USDc, or opt for same-day settlement 
-         in the local currency of your choice.
-        </p>
+  Fast, Reliable Global Payments
+  <br />
+  For Families and Businesses
+</h1>
+<strong className="mt-7 text-[22px]">
+  Say goodbye to delays — send money in seconds
+</strong>
+<p className="mt-2 text-[14px] lg:w-[400px] lg:text-[20px] text-gray-400">
+  Instantly transfer funds using stablecoins like USDC, or choose same-day settlement 
+  in local currencies — all with transparency and security at every step.
+</p>
+
       </div>
 
       {/* Right side */}
@@ -111,7 +113,7 @@ const Features = () => {
         className="flex-1 relative flex flex-col justify-between p-8 text-white font-semibold text-sm rounded-tr-[24px] rounded-br-[24px] w-[400px]"
         style={{
           backgroundImage:
-            'url("https://framerusercontent.com/images/QVtZ2wCPe83s1F5evGWz5HUPFzk.png")',
+            'url("https://vgrouplimited.com/wp-content/uploads/2023/01/AdobeStock_1768853141.jpeg")',
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -133,13 +135,13 @@ const Features = () => {
 
      <div className="flex flex-col lg:flex-row rounded-[24px] overflow-hidden h-[800px]  mb-44 font-sans bg-white lg:mx-20 ">
       {/* Left side */}
-      <div className="flex-1 px-16 py-10 flex flex-col justify-center text-black lg:-mt-60">
+      <div className="flex-1 px-5 py-10 flex flex-col justify-center text-black lg:-mt-60">
         <h1 className="font-extrabold text-[36px] lg:text-[60px] leading-tight m-0">
           Spend USDC or Fiat 
           <br />
           at your local shop
         </h1>
-        <strong className="mt-4 text-[22px]">Transact like a true local</strong>
+        <strong className="mt-7 text-[22px]">Transact like a true local</strong>
         <p className="mt-2 text-[14px] lg:w-[400px] lg:text-[20px] text-gray-400">
          Effortlessly spend USDC or any other supported
           fiat currency at your 
@@ -161,7 +163,7 @@ const Features = () => {
 
 
 
-        <div className="relative lg:right-0 right-8 top-[215px] lg:top-[450px] lg:self-end text-right font-medium text-[80px] lg:text-[250px] leading-none drop-shadow-lg">
+        <div className="relative lg:right-0 right-8 top-[235px] lg:top-[450px] lg:self-end text-right font-medium text-[80px] lg:text-[250px] leading-none drop-shadow-lg">
           1
           <span className=" text-[30px] lg:text-[68px] ml-1">%</span>
           <div className=" text-[12px] lg:text-[22px] font-normal lg:mt-[-1rem]">Average Processing Fees</div>
